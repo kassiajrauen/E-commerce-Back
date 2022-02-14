@@ -1,22 +1,20 @@
-import express, {json} from 'express';
+import express from 'express';
 import {MongoClient} from 'mongodb';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import bcrypt from 'bcrypt';
 import {v4 as uuid} from 'uuid';
 import joi from 'joi';
 
+import router from './routes/index.js';
+import db from './database.js'
+
+import dotenv from 'dotenv';
 dotenv.config();
 
-const mongoClient = new MongoClient(process.env.MONGO_URI);
-let db;
-
-mongoClient.connect().then(() => {
-    db = mongoClient.db("projeto_14_ecommerce");
-});
 
 const server = express();
-server.use(json());
+
+server.use(express.json())
 server.use(cors());
 
 server.post("/login", async (req, res) => {
@@ -95,4 +93,8 @@ server.get("/home", async (req, res) => {
 
 })
 
-//server.listen(5000);
+server.use(router);
+
+server.listen(process.env.PORT, ()=> {
+    console.log(`Rodando API Petlovers em http://localhost:${process.env.PORT}`);
+});
