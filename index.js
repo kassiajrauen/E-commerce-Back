@@ -19,6 +19,39 @@ const server = express();
 server.use(json());
 server.use(cors());
 
+server.post("/login", async (req, res) => {
+    const user = req.body;
+    
+    const loginSchema = joi.object({
+        email: joi.string().email().required(),
+        password: joi.string().required()
+    });
+    
+    const validate = loginSchema.validate(user);
+    
+    if(validate.error){
+        return res.sendStatus(422);
+    }
+
+   try{
+    const exist = await db.collection("users").findOne(user);
+         if(!exist){
+            res.sendStatus(401);
+         }
+
+    const entry = await db.collection("users").insertOne(user);
+        if(entry){
+            res.sendStatus(200)
+            return;
+        }else(
+            res.sendStatus(401)        
+        )
+   }
+    catch(error){
+        res.sendStatus(500);
+    };
+})
+
 server.post("/sign-up", async (req, res) => {
 	const user = req.body;
 	
