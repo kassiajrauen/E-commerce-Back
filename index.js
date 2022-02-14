@@ -82,4 +82,17 @@ server.post("/sign-up", async (req, res) => {
 	}
 })
 
+server.get("/home", async (req, res) => {
+    try{
+        const historic = await db.collection("historic").find({}).toArray();
+            if(historic){
+                res.sendStatus(400, historic);
+            }
+    }
+    catch(error) {
+    res.sendStatus(500);
+    }
+
+})
+
 server.listen(5000);
