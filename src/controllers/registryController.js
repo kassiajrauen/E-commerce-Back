@@ -14,7 +14,7 @@ export async function postRegistry(req, res) {
 
   try {
 
-    await db.collection("buys").insertOne({ ...registry, buyDate: Date.now()/*, userId: user._id */})
+    await db.collection("historic").insertOne({ ...registry, buyDate: Date.now()/*, userId: user._id */})
     
     res.status(201).send(registry);
 
